@@ -3,7 +3,7 @@ import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const { language, code } = await req.json();
   
   try {
@@ -18,10 +18,10 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: `Tracer script not found: ${tracerScript}` }, { status: 500 });
       }
       
-      const command = language === 'python' ? 'python3' : 'C:\\Program Files\\nodejs\\node.exe';
+      const command = language === 'python' ? 'python3' : 'node'; // ✅ safer than hardcoding Windows path
       const args = [tracerScript];
       
-      return new Promise((resolve) => {
+      return new Promise<NextResponse>((resolve) => {   // ✅ type Promise explicitly
         const child = spawn(command, args, { 
           stdio: ['pipe', 'pipe', 'pipe']
         });
@@ -54,7 +54,6 @@ export async function POST(req: NextRequest) {
             return;
           }
           
-          // Only treat as error if process exited with non-zero code
           if (exitCode !== 0) {
             resolve(NextResponse.json({ 
               error: error || 'Unknown error', 
@@ -120,9 +119,14 @@ export async function POST(req: NextRequest) {
         source: code,
       }),
     });
+
     const data = await response.json();
-    return NextResponse.json({ output: data.output || data.message || data.stderr || data.stdout || 'No output', ...data });
+    return NextResponse.json({ 
+      output: data.output || data.message || data.stderr || data.stdout || 'No output', 
+      ...data 
+    });
+
   } catch (error: any) {
     return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
   }
-} 
+}
