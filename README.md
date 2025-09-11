@@ -30,20 +30,6 @@ An **AI-powered interactive Data Structures & Algorithms (DSA) visualiser** buil
   * Cross-device compatibility
   * Fast rendering for complex data structures
 
----
-
-## 🎬 Demo / GIFs
-
-### 1. Visualising Linked List Operations
-
-![Linked List Demo](./assets/linkedlist_demo.gif)
-
-### 2. AI Code Fix & Explanation
-
-![AI Demo](./assets/ai_demo.gif)
-*Enter your algorithm code, let AI fix it, and get TC/SC analysis with step-by-step explanation.*
-
----
 
 ## 💻 Installation
 
